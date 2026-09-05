@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HCS-DEV-STD-001 시스템개발 표준 (실무 가이드)</title>
+<style>
+:root{--navy:#1E3A5F;--steel:#4A6785;--ink:#1A1F26;--mute:#5C6773;--rule:#D9DEE5;--pane:#F3F5F8;--amber:#E8A200;--red:#B03A2E;--green:#2E7D4F;--white:#fff}
+*{box-sizing:border-box}
+html{font-size:15px}
+body{margin:0;background:#E9ECF0;color:var(--ink);font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;line-height:1.6;word-break:keep-all}
+.sheet{max-width:980px;margin:24px auto;background:var(--white);box-shadow:0 2px 12px rgba(30,58,95,.12)}
+header{background:var(--navy);color:#fff;padding:28px 40px 24px;display:grid;grid-template-columns:44px 1fr auto;gap:18px;align-items:center}
+.logo{width:44px;height:44px;background:var(--amber);color:var(--navy);font-weight:800;font-size:22px;display:grid;place-items:center;border-radius:4px}
+header h1{margin:0;font-size:24px;font-weight:700}
+header .sub{font-size:13px;opacity:.8;margin-top:2px}
+.docno{text-align:right;font-size:12px;line-height:1.5;opacity:.85}
+.docno b{display:block;font-size:14px;opacity:1}
+main{padding:32px 40px 40px}
+h2{font-size:17px;margin:40px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--navy)}
+h2:first-child{margin-top:0}
+p{margin:0 0 10px}
+.lead{max-width:72ch}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0 6px}
+th,td{border:1px solid var(--rule);padding:7px 10px;vertical-align:top;text-align:left}
+th{background:var(--pane);font-weight:600;color:var(--navy);white-space:nowrap}
+td.k{white-space:nowrap;font-weight:600;color:var(--steel)}
+code{background:var(--pane);padding:1px 5px;border-radius:3px;font-size:12.5px;font-family:Consolas,"D2Coding",monospace}
+/* 흐름 요약 */
+.flow{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:14px 0 4px}
+.flow div{background:var(--pane);border-top:4px solid var(--navy);padding:8px 8px 6px;font-size:12.5px;line-height:1.35}
+.flow b{display:block;color:var(--navy);font-size:15px;margin-bottom:2px}
+.flow .t{color:var(--mute);font-size:11.5px;margin-top:4px}
+/* 단계 */
+.step{display:grid;grid-template-columns:64px 1fr;gap:0 18px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.no{width:48px;height:48px;border:2px solid var(--navy);color:var(--navy);font-weight:800;font-size:20px;display:grid;place-items:center}
+.step h3{margin:6px 0 4px;font-size:17px;color:var(--navy)}
+.step .one{color:var(--mute);font-size:13.5px;margin-bottom:12px}
+.blk{margin:12px 0}
+.blk h4{margin:0 0 6px;font-size:13.5px;color:var(--steel);font-weight:700}
+.qa{border-left:4px solid var(--steel);background:var(--pane);padding:10px 14px;margin:6px 0;font-size:13.5px}
+.qa .q{font-weight:700;color:var(--navy)}
+.qa .a{margin-top:3px}
+.qa .a::before{content:"→ ";color:var(--steel)}
+.ex{border:1px solid var(--rule);padding:10px 14px;font-size:13.5px;background:#fff}
+.ex table{margin:4px 0}
+.warn{border-left:4px solid var(--red);background:#FBF1EF;padding:10px 14px;font-size:13.5px;margin:6px 0}
+.warn b{color:var(--red)}
+.gate{border-left:4px solid var(--amber);background:#FFF8E5;padding:10px 14px;font-size:13.5px;margin:6px 0}
+.gate b{color:#8A6100}
+.ok{color:var(--green);font-weight:700}.ng{color:var(--red);font-weight:700}
+footer{padding:16px 40px;border-top:1px solid var(--rule);font-size:12px;color:var(--mute);display:flex;justify-content:space-between}
+@media (max-width:720px){.flow{grid-template-columns:repeat(2,1fr)}header{grid-template-columns:44px 1fr}.docno{grid-column:1/-1;text-align:left}main{padding:24px 16px}.step{grid-template-columns:44px 1fr;gap:0 10px}.no{width:36px;height:36px;font-size:16px}}
+@media print{body{background:#fff}.sheet{box-shadow:none;margin:0;max-width:none}h2{break-after:avoid}.step,.qa,.ex,.warn,.gate{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="sheet">
+<header>
+  <div class="logo">H</div>
+  <div><h1>시스템개발 표준 — 실무 가이드</h1><div class="sub">MES를 처음 만드는 사람이 단계마다 무엇을 묻고, 무엇을 적고, 무엇을 확인해야 하는지</div></div>
+  <div class="docno"><b>HCS-DEV-STD-001</b>제정 2026-09-05 · Rev.1<br>HC Smart</div>
+</header>
+<main>
+
+<h2>한 장 요약</h2>
+<p class="lead">아래 8칸을 순서대로 지나간다. 각 칸 아래 작은 글씨가 "이 칸을 나갈 때 손에 있어야 하는 것"이다. 그게 없으면 다음 칸으로 가지 않는다.</p>
+<div class="flow">
+  <div><b>1</b>프로세스 정의<div class="t">흐름도 + 고객 서명</div></div>
+  <div><b>2</b>기준정보 설계<div class="t">기준정보표 + 엑셀 초기값</div></div>
+  <div><b>3</b>DB 스키마<div class="t">DDL + 권한표</div></div>
+  <div><b>4</b>화면 목차·명세<div class="t">메뉴트리 + 화면명세표</div></div>
+  <div><b>5</b>공통 모듈<div class="t">공통 JS + 템플릿</div></div>
+  <div><b>6</b>화면 개발<div class="t">화면 + 등록예제</div></div>
+  <div><b>7</b>검증<div class="t">하네스·시뮬·실브라우저 결과</div></div>
+  <div><b>8</b>시연·인도<div class="t">가상데이터 + 점검표</div></div>
+</div>
+
+<h2>단계별 실무</h2>
+
+<!-- 1 -->
+<div class="step">
+  <div><div class="no">1</div></div>
+  <div>
+    <h3>프로세스 정의 — 고객 사무실에서 물어보는 단계</h3>
+    <div class="one">컴퓨터를 켜기 전에 한다. 고객이 하는 말을 "단계 · 들어오는 것 · 나가는 것 · 하는 사람"으로 받아 적는다.</div>
+
+    <div class="blk"><h4>이렇게 묻는다</h4>
+      <div class="qa"><div class="q">"주문이 들어오면 제일 먼저 누가 뭘 합니까?"</div><div class="a">"영업이 견적번호 받고 제번을 딴다. 제번은 26DGA005A 같은 식."</div></div>
+      <div class="qa"><div class="q">"그 다음 설계는 뭘 보고 시작합니까? 끝났다는 건 뭘로 압니까?"</div><div class="a">"수주서 보고 시작. 조립도·부품도 나오고 PartList 넘기면 끝."</div></div>
+      <div class="qa"><div class="q">"구매는 PartList 말고 다른 걸 보는 게 있습니까?"</div><div class="a">"원재료는 PartList, 구매품은 부품표, 외주가공은 가공공정표."</div></div>
+      <div class="qa"><div class="q">"Try-Out(S1)이 끝나면 어디에 뭘 남깁니까? 몇 번까지 합니까?"</div><div class="a">"검사시트. 보통 2~3차. 승인 나야 출고."</div></div>
+    </div>
+
+    <div class="blk"><h4>이렇게 적는다</h4>
+      <div class="ex"><table>
+        <tr><th>단계</th><th>들어오는 것</th><th>나가는 것</th><th>담당</th><th>끝나는 조건</th></tr>
+        <tr><td>수주등록</td><td>고객 발주서, 견적번호</td><td>제번, 수주서</td><td>영업</td><td>제번 채번</td></tr>
+        <tr><td>설계계획·실적</td><td>수주서</td><td>조립도·부품도, PartList</td><td>설계</td><td>PartList 배포</td></tr>
+        <tr><td>원재료 발주</td><td>PartList</td><td>발주서, 입고예정</td><td>구매</td><td>입고확정</td></tr>
+        <tr><td>조립·Try-Out</td><td>입고 부품, 가공품</td><td>검사시트, T/O 승인</td><td>조립</td><td>승인</td></tr>
+      </table></div>
+    </div>
+
+    <div class="warn"><b>흔한 실수</b> 고객이 "우리는 특별한 거 없어요"라고 하면 그냥 넘어가는 것. 그 자리에서 실제 수주서·PartList·검사시트 종이를 한 장씩 받아온다. 종이 양식이 곧 화면이다.</div>
+    <div class="gate"><b>나갈 때 확인</b> 위 표를 고객 현업 책임자가 보고 "맞다"고 서명. 이후 "그거 원래 그렇게 안 해요"는 변경요청서로 받는다.</div>
+  </div>
+</div>
+
+<!-- 2 -->
+<div class="step">
+  <div><div class="no">2</div></div>
+  <div>
+    <h3>기준정보 설계 — 1단계 표에서 명사를 뽑는 단계</h3>
+    <div class="one">1단계 표에 반복해서 나오는 명사가 기준정보다. 업체, 공정, 자재, 부품, 설비, 사용자, 아이템, 금형타입, 기계사양…</div>
+
+    <div class="blk"><h4>이렇게 묻는다</h4>
+      <div class="qa"><div class="q">"업체 코드는 지금 있습니까? 없으면 우리가 V001부터 매겨도 됩니까?"</div><div class="a">"ERP에 있는 거 그대로 써달라." → 코드 체계는 고객 것을 따른다.</div></div>
+      <div class="qa"><div class="q">"고객사와 협력업체가 같은 회사인 경우가 있습니까?"</div><div class="a">"있다. 삼수금속은 고객이면서 양산업체." → 구분 컬럼 하나가 아니라 역할 플래그(원자재/면삭/구매품/외주가공)로 간다.</div></div>
+      <div class="qa"><div class="q">"이 목록은 누가 관리합니까? 바뀌면 누가 고칩니까?"</div><div class="a">"생산관리 김과장." → 관리부서 컬럼에 적고, 그 사람에게 권한을 준다.</div></div>
+      <div class="qa"><div class="q">"초기 데이터를 엑셀로 주실 수 있습니까? 언제요?"</div><div class="a">날짜를 받아 적는다. 이게 이 단계의 게이트다.</div></div>
+    </div>
+
+    <div class="blk"><h4>이렇게 적는다</h4>
+      <div class="ex"><table>
+        <tr><th>기준정보</th><th>키</th><th>주요 컬럼</th><th>초기값 출처</th><th>관리</th></tr>
+        <tr><td>업체</td><td>vendor_code (V001)</td><td>업체명, 구분(고객사/협력업체/자사), 역할 플래그 4개, 소재지</td><td>ERP 업체 엑셀</td><td>구매</td></tr>
+        <tr><td>공정</td><td>process_code (DL, AS…)</td><td>공정명, 그룹(설계/가공/조립), 순서</td><td>공정표 종이</td><td>생산관리</td></tr>
+        <tr><td>자재</td><td>material_code (STD11)</td><td>자재명, 그룹(원재료/구매품), 비중</td><td>자재 단가표</td><td>구매</td></tr>
+        <tr><td>제번(핵심 키)</td><td>job_no (26DGA005A)</td><td>연도2 + 고객약어 + 순번3 + 차수</td><td>채번 규칙 문서화</td><td>영업</td></tr>
+      </table></div>
+    </div>
+
+    <div class="warn"><b>흔한 실수</b> "일단 공장 컬럼 넣어두자"처럼 쓸지 안 쓸지 모르는 컬럼을 넣는 것. IPMES에서 공장 항목을 38개 화면에서 뒤늦게 뺐다. 지금 쓰는 것만 넣는다.</div>
+    <div class="gate"><b>나갈 때 확인</b> 고객이 엑셀 초기 데이터를 실제로 보냈는가. 안 왔으면 설계가 끝난 게 아니다.</div>
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="step">
+  <div><div class="no">3</div></div>
+  <div>
+    <h3>DB 스키마 — 표를 테이블로 옮기는 단계</h3>
+    <div class="one">2단계 기준정보 테이블 + 1단계 각 행마다 트랜잭션 테이블 하나. 화면이 공통으로 보는 집계는 뷰로.</div>
+
+    <div class="blk"><h4>스스로 묻는다</h4>
+      <div class="qa"><div class="q">"이 테이블의 한 행은 무엇 하나인가?"</div><div class="a">sale_orders 한 행 = 제번 하나. design_plan_steps 한 행 = 제번 + 공정 하나. 이게 안 정해지면 PK가 안 나온다.</div></div>
+      <div class="qa"><div class="q">"제번 목록을 보여주는 화면이 몇 개인가?"</div><div class="a">영업·설계·구매·조립 전부. → <code>job_pool</code> 뷰 하나 만들고 다 그걸 본다. 화면마다 조인하지 않는다.</div></div>
+      <div class="qa"><div class="q">"이 테이블을 누가 읽고 누가 쓰나?"</div><div class="a">기준정보: 로그인 사용자 전원 읽기, 관리부서만 쓰기. → 권한 정책표에 적는다.</div></div>
+    </div>
+
+    <div class="blk"><h4>이렇게 적는다</h4>
+      <div class="ex"><table>
+        <tr><th>테이블</th><th>한 행</th><th>PK</th><th>FK</th><th>읽기</th><th>쓰기</th></tr>
+        <tr><td>vendors</td><td>업체 하나</td><td>vendor_code</td><td>—</td><td>전원</td><td>구매</td></tr>
+        <tr><td>sale_orders</td><td>제번 하나</td><td>job_no</td><td>jobs, vendors, users</td><td>전원</td><td>영업</td></tr>
+        <tr><td>partlist_materials</td><td>제번+공정+품번</td><td>(job_no, process_code, part_no)</td><td>jobs</td><td>전원</td><td>설계</td></tr>
+        <tr><td>job_pool (뷰)</td><td>진행 중 제번</td><td>—</td><td>—</td><td>전원</td><td>—</td></tr>
+      </table></div>
+    </div>
+
+    <div class="warn"><b>IPMES에서 겪은 것</b> 같은 DB에 다른 프로젝트 정책이 들어와 업체 목록이 0건으로 보였다. 테이블마다 정책이 있는지, 테스트 계정으로 <code>select</code>가 되는지 SQL로 확인한다. 화면에서 안 보이면 코드보다 권한을 먼저 의심한다.</div>
+    <div class="gate"><b>나갈 때 확인</b> 백업 스키마 생성. 테스트 계정으로 전 테이블 조회·저장·삭제 SQL 통과.</div>
+  </div>
+</div>
+
+<!-- 4 -->
+<div class="step">
+  <div><div class="no">4</div></div>
+  <div>
+    <h3>화면 목차·명세 — 화면 하나를 한 줄로 적는 단계</h3>
+    <div class="one">메뉴 = 1단계 프로세스 순서. 화면 한 줄 = 읽는 표 + 쓰는 표 + 버튼. 이 표가 6단계 개발 체크리스트이자 7단계 테스트 목록이다.</div>
+
+    <div class="blk"><h4>이렇게 묻는다</h4>
+      <div class="qa"><div class="q">"이 화면에서 저장 누르면 어디에 뭐가 남아야 합니까?"</div><div class="a">"발주서 한 줄이 남고 자재표에서 그 품번은 발주됨으로 표시." → 쓰는 표 2개, 상태 컬럼 1개.</div></div>
+      <div class="qa"><div class="q">"조회만 하는 사람과 등록하는 사람이 같습니까?"</div><div class="a">"다르다. 현황은 소장님이 보고 등록은 담당자." → 등록 화면과 현황 화면을 나눈다.</div></div>
+      <div class="qa"><div class="q">"이 화면을 하루에 몇 번, 한 번에 몇 건 입력합니까?"</div><div class="a">"PartList는 한 번에 100줄." → 엑셀 붙여넣기 버튼이 필요하다.</div></div>
+    </div>
+
+    <div class="blk"><h4>이렇게 적는다</h4>
+      <div class="ex"><table>
+        <tr><th>화면</th><th>파일</th><th>읽는 표</th><th>쓰는 표</th><th>버튼</th><th>권한</th></tr>
+        <tr><td>업체관리</td><td>vendor_management.html</td><td>vendors</td><td>vendors</td><td>찾기 · 지우기 · 신규 · 저장 · 삭제 · 엑셀붙여넣기 · 등록예제</td><td>구매</td></tr>
+        <tr><td>원재료 발주</td><td>material_order_input.html</td><td>job_pool, vendors(원자재), partlist_materials, order_lines</td><td>order_lines</td><td>조회 · 요청추가 · 요청삭제 · 발주저장 · 발주취소 · 첨부</td><td>구매</td></tr>
+        <tr><td>조립실적등록</td><td>assembly_result_input.html</td><td>assembly_job_pool, assembly_steps(없으면 design_plan_steps)</td><td>assembly_results, assembly_steps, assembly_jobs</td><td>조회 · 실적등록 · 실적삭제 · 세부공정완료 · 조립완료 · 검사시트</td><td>조립</td></tr>
+      </table></div>
+    </div>
+
+    <div class="warn"><b>흔한 실수</b> 버튼을 나중에 "필요하면 붙이지" 하는 것. 버튼은 곧 쓰는 표다. 표에 버튼이 없으면 그 화면은 조회 화면이고, 조회 화면에 저장 버튼이 생기면 명세가 틀린 것이다.</div>
+    <div class="gate"><b>나갈 때 확인</b> 고객이 메뉴 트리와 화면 명세표를 보고 확인. "이 화면도 있어야 하는데요"는 여기서 다 받는다.</div>
+  </div>
+</div>
+
+<!-- 5 -->
+<div class="step">
+  <div><div class="no">5</div></div>
+  <div>
+    <h3>공통 모듈 — 한 번 만들어 60번 쓰는 단계</h3>
+    <div class="one">DB 접근, 로그인, 기준정보 CRUD 패턴, 삭제 확인창, 조회 팝업, 엑셀 붙여넣기. 여기서 버그 하나면 화면 60개가 같이 틀린다.</div>
+
+    <div class="blk"><h4>스스로 묻는다</h4>
+      <div class="qa"><div class="q">"기준정보 화면 15개가 서로 다른 코드일 이유가 있나?"</div><div class="a">없다. → <code>MESDB.master({table, pk, map})</code> 하나로 조회·저장·삭제·자동새로고침을 다 처리한다. 화면은 컬럼 매핑만 적는다.</div></div>
+      <div class="qa"><div class="q">"저장 후 화면이 자동으로 바뀌어야 하나, 사용자가 조회를 눌러야 하나?"</div><div class="a">자동. → <code>notify/onChange</code>로 같은 표를 보는 화면이 같이 갱신된다. 이걸 화면마다 만들면 반드시 빠뜨린다.</div></div>
+      <div class="qa"><div class="q">"파일을 고쳤는데 고객 화면이 안 바뀌면?"</div><div class="a">캐시. → 모든 JS는 <code>?v=APP_VER</code>로 부르고, 파일 고치면 번호를 올린다. 규칙을 문서에 적어둔다.</div></div>
+    </div>
+
+    <div class="blk"><h4>공통 모듈 목록 예</h4>
+      <div class="ex"><table>
+        <tr><th>파일</th><th>역할</th><th>화면에서 쓰는 방법</th></tr>
+        <tr><td>mes_db.js</td><td>DB 접근, 기준정보 CRUD, 변경 알림, 버전</td><td><code>MESDB.table('vendors').select(...)</code>, <code>MESDB.master({...})</code></td></tr>
+        <tr><td>mes_auth.js</td><td>로그인, 토큰, 권한</td><td>index.html에서만 로드. 화면은 부모 토큰을 읽음</td></tr>
+        <tr><td>mes_ctx.js</td><td>삭제 확인창, 버튼 색 규칙</td><td>자동. 삭제 버튼 누르면 확인창</td></tr>
+        <tr><td>mes_lookup.js</td><td>업체·품번 조회 팝업</td><td><code>MESLK.open('vendor', cb)</code></td></tr>
+        <tr><td>mes_paste.js</td><td>엑셀 붙여넣기</td><td>버튼 하나 붙이면 끝</td></tr>
+      </table></div>
+    </div>
+
+    <div class="gate"><b>나갈 때 확인</b> 템플릿으로 기준정보 화면 3개(업체·공정·자재)를 만들어 7단계 1차 하네스를 통과.</div>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="step">
+  <div><div class="no">6</div></div>
+  <div>
+    <h3>화면 개발 — 명세표 한 줄씩 닫는 단계</h3>
+    <div class="one">기준정보 15개 → 영업 → 설계 → 구매 → 조립 → 원가 순서. 4단계 명세표의 행을 하나 만들 때마다 체크한다. 진행률은 "닫은 행 / 전체 행".</div>
+
+    <div class="blk"><h4>화면 하나 만드는 순서</h4>
+      <div class="ex">
+        <p style="margin:0 0 4px"><b>1)</b> 템플릿 복사 → 파일명·제목·breadcrumb 수정</p>
+        <p style="margin:0 0 4px"><b>2)</b> 명세표의 "읽는 표"만큼 조회 코드 → 화면에 목록이 뜨는지 확인</p>
+        <p style="margin:0 0 4px"><b>3)</b> 명세표의 "버튼" 하나씩: 버튼 이름 = 메시지 (저장 → "저장했습니다", 삭제 → "삭제했습니다")</p>
+        <p style="margin:0 0 4px"><b>4)</b> 실패 메시지는 원인 + 조치: <span class="ng">"저장 실패"</span> 가 아니라 <span class="ok">"저장 실패: 등록되지 않은 제번입니다. 영업관리 › 수주등록에서 먼저 등록하세요."</span></p>
+        <p style="margin:0 0 4px"><b>5)</b> 등록예제 버튼: 이 화면을 처음 보는 사람이 눌러보면 채워지는 샘플 값</p>
+        <p style="margin:0"><b>6)</b> 7단계 1차 하네스 돌리고 명세표 행 닫기</p>
+      </div>
+    </div>
+
+    <div class="blk"><h4>고객이 자주 하는 말과 대응</h4>
+      <div class="qa"><div class="q">"S1이 뭐예요? 우리는 Try-Out이라고 하는데."</div><div class="a">1단계 용어 정의서에 있었어야 할 말. 지금 나오면 용어 정의서에 추가하고 전 파일 일괄 치환(IPMES: 15개 파일).</div></div>
+      <div class="qa"><div class="q">"설계랑 조립이 같은 화면인 게 이상해요."</div><div class="a">4단계에서 "쓰는 사람이 다른가"를 안 물어본 결과. <code>?mode=</code> 파라미터로 화면을 나눈다.</div></div>
+    </div>
+
+    <div class="gate"><b>나갈 때 확인</b> 모듈(영업/설계/구매/조립) 하나 끝날 때마다 7단계 2차 시뮬 통과.</div>
+  </div>
+</div>
+
+<!-- 7 -->
+<div class="step">
+  <div><div class="no">7</div></div>
+  <div>
+    <h3>검증 — 싼 것을 자주, 비싼 것을 인도 전에</h3>
+    <div class="one">세 가지 검증은 잡는 결함이 다르다. 하나가 다른 걸 대신하지 않는다.</div>
+
+    <div class="blk"><h4>무엇을, 언제</h4>
+      <div class="ex"><table>
+        <tr><th>검증</th><th>어떻게</th><th>언제</th><th>걸리는 시간</th><th>잡는 것</th><th>못 잡는 것</th></tr>
+        <tr><td class="k">1차 버튼 하네스</td><td>가짜 브라우저(jsdom) + 가짜 DB. 버튼을 전부 자동으로 눌러봄. <code>node sim_buttons.js</code></td><td>화면 하나 만들 때마다</td><td>26개 화면 30초</td><td>JS 오류, 저장 눌렀는데 요청 안 나감</td><td>권한, 실제 DB 오류, 화면 겹침</td></tr>
+        <tr><td class="k">2차 데이터 흐름</td><td>수주 1건을 설계→구매→조립→원가까지 흘려서 끝 숫자가 맞는지 확인. <code>node sim_sales.js</code> 등</td><td>모듈 하나 끝날 때</td><td>5분</td><td>모듈 간 키 불일치, 집계 오류 (IPMES 15건)</td><td>실제 화면 조작감</td></tr>
+        <tr><td class="k">3차 실브라우저</td><td>진짜 크롬이 실제 사이트에 로그인해 실제 DB에 대고 클릭. <code>node pw_buttons.js</code></td><td>인도 전, 고객 지적 재현</td><td>26개 화면 10분</td><td>가려진 버튼, 확인창, iframe, 권한</td><td>—</td></tr>
+      </table></div>
+    </div>
+
+    <div class="blk"><h4>결과는 이렇게 읽는다</h4>
+      <div class="ex">
+        <p style="margin:0 0 4px"><code>OK   사업부정보  저장 ok req=[POST business_divisions] msg="BN005 항목을 저장했습니다"</code> → 정상</p>
+        <p style="margin:0 0 4px"><code>FAIL 업체관리  저장 ok req=[] msg="저장했습니다"</code> → <span class="ng">메시지는 성공인데 요청이 없다.</span> 화면이 거짓말하는 경우. 가장 위험.</p>
+        <p style="margin:0"><code>FAIL 단가변동등록  삭제 ok req=[] msg="삭제할 행을 선택하세요"</code> → 하네스가 행을 못 골랐을 수도 있다. 사람이 한 번 눌러보고 판단.</p>
+      </div>
+    </div>
+
+    <div class="warn"><b>고객이 "안 돼요"라고 할 때</b> 코드부터 열지 말고 순서대로: ① 요청이 서버까지 갔나(로그) ② 권한이 있나(SQL) ③ 그 다음 코드. IPMES 업체 0건은 ②였고, 삭제 안 됨은 ①에서 요청 자체가 없었다.</div>
+    <div class="gate"><b>나갈 때 확인</b> 1·2·3차 결과 파일 첨부. FAIL 0건이거나, 남은 결함 목록에 고객이 합의.</div>
+  </div>
+</div>
+
+<!-- 8 -->
+<div class="step">
+  <div><div class="no">8</div></div>
+  <div>
+    <h3>시연 데이터·인도·검수 — 빈 화면을 보여주지 않는 단계</h3>
+    <div class="one">고객은 빈 목록으로는 시스템을 이해하지 못한다. 수주부터 실적까지 이어진 가상 제번을 3건 이상 넣고, 그 제번으로 전 화면을 시연한다.</div>
+
+    <div class="blk"><h4>가상 데이터 만드는 법</h4>
+      <div class="ex"><table>
+        <tr><th>제번</th><th>수주</th><th>설계계획</th><th>자재표</th><th>조립공정</th><th>비고</th></tr>
+        <tr><td>26DGA101A</td><td>삼수금속 · 자동차 · 3,200만</td><td>DL/DA/DP 3공정</td><td>B11/B12/B13/B15 4품번</td><td>AS/TO/S1/CQ 4공정</td><td>시연용 가상 수주 1</td></tr>
+        <tr><td>26DGA102A</td><td>청승정기 · 자동차 · 1,850만</td><td>〃</td><td>〃</td><td>〃</td><td>시연용 가상 수주 2</td></tr>
+        <tr><td>26DGA103A</td><td>대정산업 · 가전 · 2,400만</td><td>〃</td><td>〃</td><td>〃</td><td>시연용 가상 수주 3</td></tr>
+      </table>
+      <p style="margin:6px 0 0">규칙: 품번·재질·업체는 기준정보에 있는 코드만 쓴다(FK 오류 방지). 비고에 "시연용"을 적고 제번 접두어를 정해 한 번에 지울 수 있게 한다. 두께·가로·세로처럼 계산에 쓰는 값은 비우지 않는다.</p></div>
+    </div>
+
+    <div class="blk"><h4>검수 운영</h4>
+      <div class="qa"><div class="q">"이거 왜 안 되죠?" 를 회의 중에 받으면?</div><div class="a">그 자리에서 고치지 않는다. 점검표(QA-001) 행으로 받아 적고 번호를 준다. 다음 주 리뷰에서 닫는다.</div></div>
+      <div class="qa"><div class="q">고객 여러 명이 각자 연락하면?</div><div class="a">창구는 HC Smart 하나(QA-002). 월 개발 → 수 스테이징 → 목 문서 → 금 14시 화면공유 리뷰.</div></div>
+    </div>
+
+    <div class="gate"><b>나갈 때 확인</b> 점검표 전 항목 고객 확인. 인도 패키지(플랫 ZIP, 버전 기재), 백업 스키마와 복원 절차 인계.</div>
+  </div>
+</div>
+
+<h2>자주 하는 질문</h2>
+<div class="qa"><div class="q">기준정보부터 만들면 안 되나? 고객이 업체 목록은 이미 갖고 있는데.</div><div class="a">목록은 받아두되 컬럼은 1단계 뒤에 정한다. "고객사이면서 양산업체" 같은 건 프로세스를 들어야 안다.</div></div>
+<div class="qa"><div class="q">화면 60개를 다 명세표로 쓰면 시간이 너무 걸리지 않나?</div><div class="a">한 줄에 1분. 60줄이면 1시간. 명세 없이 만들었다가 38개 화면에서 컬럼 빼는 데 며칠 걸렸다.</div></div>
+<div class="qa"><div class="q">하네스 세 개를 다 해야 하나?</div><div class="a">1차는 매번(30초). 2차는 모듈당 1회. 3차는 인도 전 1회 + 고객 지적 재현 때. 1차만 해도 절반은 잡힌다.</div></div>
+<div class="qa"><div class="q">고객이 1단계 서명을 안 해주면?</div><div class="a">"이대로 만들겠습니다"라고 메일로 보내고 회신 없으면 그 메일이 서명이다. 기록이 없는 게 문제지 형식이 문제가 아니다.</div></div>
+
+<h2>관련 문서·도구</h2>
+<table>
+  <tr><th style="width:26%">이름</th><th>용도</th></tr>
+  <tr><td>HCS-MES-QA-001</td><td>인도 점검표 양식</td></tr>
+  <tr><td>HCS-MES-QA-002</td><td>주간 화면공유 리뷰 운영안</td></tr>
+  <tr><td>sim_buttons.js + base_screens.json</td><td>1차 버튼 하네스</td></tr>
+  <tr><td>sim_sales / sim_design / sim_purchase / sim_assembly.js + mockdb.js</td><td>2차 데이터 흐름 시뮬레이션</td></tr>
+  <tr><td>pw_buttons.js</td><td>3차 실브라우저 테스트 (Playwright)</td></tr>
+</table>
+
+</main>
+<footer><span>HCS-DEV-STD-001 · 시스템개발 표준 실무 가이드 · Rev.1</span><span>HC Smart</span></footer>
+</div>
+</body>
+</html>
